@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Americas Language Pack v1.0 for Bloodborne on shadPS4 (+ BBLauncher).
+    Americas Language Pack v1.1 for Bloodborne on shadPS4 (+ BBLauncher) or BBPort.
 
 .DESCRIPTION
     Adds Latin American Spanish, Brazilian Portuguese and US English to the
@@ -19,13 +19,19 @@
     It reads the game files and writes a new mod folder for BBLauncher.
     The game folder itself is never changed.
 
+    BBPort (the native Windows port) has no Language menu in the game: its
+    launcher sets the language. There the script writes a text-only mod to
+    BBPort's mods folder that puts Latin American Spanish text in place of
+    Spanish (Spain). BBPort already has the Latin American Spanish voices
+    and Brazilian Portuguese.
+
 .EXAMPLE
     Double-click "INSTALL - Americas Language Pack.bat" in this folder.
     See README.txt for details.
 
 .NOTES
     Created by Rammsiris - Game Developer
-    Version 1.0
+    Version 1.1
 #>
 param(
     [string]$GameFolder = '',
@@ -35,7 +41,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $script:ModName    = 'Americas Language Pack'
-$script:ModVersion = '1.0'
+$script:ModVersion = '1.1'
 $script:Author     = 'Rammsiris'
 $script:ActiveName = 'Mods-Active (DO NOT DELETE)'
 $script:Building   = $null
@@ -48,6 +54,24 @@ $script:Packs = @(
     [pscustomobject]@{ Es = 'Español (Latinoamérica)'; En = 'Spanish (Latin America)'; Text = 'spaar'; Voice = 'esa'; Slot = 'itait'; SlotVoice = 'iti'; LabelSlot = 115103; Label = 115106; OldEs = 'Italiano'; OldEn = 'Italian' },
     [pscustomobject]@{ Es = 'Portugués (Brasil)';      En = 'Portuguese (Brazil)';     Text = 'porbr'; Voice = 'ptb'; Slot = 'deude'; SlotVoice = 'ded'; LabelSlot = 115104; Label = 115107; OldEs = 'Alemán';   OldEn = 'German' },
     [pscustomobject]@{ Es = 'Inglés (Estados Unidos)'; En = 'English (United States)'; Text = 'engus'; Voice = $null; Slot = 'dandk'; SlotVoice = $null; LabelSlot = 115112; Label = 115108; OldEs = 'Danés';    OldEn = 'Danish' }
+)
+
+# BBPort sets the text language in its launcher and has no Language menu in
+# the game, so there only the Latin American Spanish text is added, in place
+# of Spanish (Spain): "Spanish" in BBPort's launcher then shows it.
+$script:PortPack = [pscustomobject]@{ Es = 'Español (Latinoamérica)'; En = 'Spanish (Latin America)'; Text = 'spaar'; Voice = $null; Slot = 'spaes'; SlotVoice = $null; OldEs = 'Español (España)'; OldEn = 'Spanish (Spain)' }
+
+# BBPort's "Quit to Desktop" (on by default, game version 1.09) turns two menu
+# entries into Quit to Desktop and writes their texts into every language's
+# menu, in a layer below the mods. The Spanish menu of this pack carries the
+# same texts (BBPort's own), or those entries would keep their old names
+# ("Idioma", "Cuadro de opinión"). Fmg: 200 entries, 201 help line, 204 dialogs.
+$script:PortQuitTexts = @(
+    [pscustomobject]@{ Fmg = 200; Id = 401307; Text = 'Salir al escritorio' },
+    [pscustomobject]@{ Fmg = 200; Id = 110005; Text = 'Salir al escritorio' },
+    [pscustomobject]@{ Fmg = 201; Id = 401307; Text = 'Cerrar el juego.' },
+    [pscustomobject]@{ Fmg = 201; Id = 110005; Text = 'Guardar y cerrar el juego.' },
+    [pscustomobject]@{ Fmg = 204; Id = 110005; Text = '¿Salir del juego y volver al escritorio?' }
 )
 
 # Text languages listed in the European Language menu (their language names get renamed too).
@@ -119,6 +143,98 @@ function Find-Launcher([string]$start, [int]$levels) {
         $dir = [IO.Path]::GetDirectoryName($dir)
     }
     return ''
+}
+
+# BBPort keeps Bloodborne.exe next to "Play Bloodborne.exe", bbport.ini or its
+# launcher folder. Looks in $start and up to $levels parent folders and
+# returns that folder, or '' if it isn't there.
+function Find-Port([string]$start, [int]$levels) {
+    $dir = $start
+    for ($i = 0; $i -le $levels -and $dir; $i++) {
+        if ([IO.File]::Exists([IO.Path]::Combine($dir, 'Bloodborne.exe')) -and (
+            [IO.File]::Exists([IO.Path]::Combine($dir, 'Play Bloodborne.exe')) -or
+            [IO.File]::Exists([IO.Path]::Combine($dir, 'bbport.ini')) -or
+            [IO.Directory]::Exists([IO.Path]::Combine($dir, 'launcher')))) {
+            return $dir
+        }
+        $dir = [IO.Path]::GetDirectoryName($dir)
+    }
+    return ''
+}
+
+# BBPort's launcher settings (%APPDATA%\bbport-launcher\settings.json), or $null.
+function Get-PortSettings {
+    try {
+        if (-not $env:APPDATA) { return $null }
+        $file = [IO.Path]::Combine($env:APPDATA, 'bbport-launcher', 'settings.json')
+        if (-not [IO.File]::Exists($file)) { return $null }
+        return ([IO.File]::ReadAllText($file) | ConvertFrom-Json)
+    } catch {
+        return $null
+    }
+}
+
+# The game folder chosen in BBPort's launcher, or the one it uses by default
+# (CUSA03173 next to the BBPort folder).
+function Get-PortGamePath([string]$port, $settings) {
+    if ($settings -and $settings.game_dir -and "$($settings.game_dir)".Trim()) { return "$($settings.game_dir)".Trim() }
+    return [IO.Path]::Combine([IO.Path]::GetDirectoryName($port), 'CUSA03173')
+}
+
+# Where BBPort keeps bbport.ini, mods.json and its default mods folder: next
+# to Bloodborne.exe (or BB_DATA_DIR, if set).
+function Get-PortDataFolder([string]$port) {
+    if ($env:BB_DATA_DIR -and $env:BB_DATA_DIR.Trim()) { return $env:BB_DATA_DIR.Trim() }
+    return $port
+}
+
+# The folder BBPort loads mods from: the one chosen in its launcher, or
+# "mods" next to Bloodborne.exe (BBPort doesn't create it until it's needed).
+function Get-PortModsFolder([string]$port, $settings) {
+    if ($settings -and $settings.mods_dir -and "$($settings.mods_dir)".Trim()) { return "$($settings.mods_dir)".Trim() }
+    return [IO.Path]::Combine((Get-PortDataFolder $port), 'mods')
+}
+
+# APP_VER of the game's sce_sys\param.sfo ("01.09"), or '' if it can't be read.
+function Get-GameVersion([string]$game) {
+    try {
+        $b = [IO.File]::ReadAllBytes([IO.Path]::Combine($game, 'sce_sys', 'param.sfo'))
+        if ($b.Length -lt 0x14 -or $b[0] -ne 0 -or $b[1] -ne 0x50 -or $b[2] -ne 0x53 -or $b[3] -ne 0x46) { return '' }
+        $keys = [BitConverter]::ToInt32($b, 0x08)
+        $values = [BitConverter]::ToInt32($b, 0x0C)
+        $count = [BitConverter]::ToInt32($b, 0x10)
+        for ($i = 0; $i -lt $count; $i++) {
+            $e = 0x14 + $i * 16
+            $at = $keys + [BitConverter]::ToUInt16($b, $e)
+            $end = $at
+            while ($end -lt $b.Length -and $b[$end] -ne 0) { $end++ }
+            if ([Text.Encoding]::ASCII.GetString($b, $at, $end - $at) -cne 'APP_VER') { continue }
+            $text = [Text.Encoding]::UTF8.GetString($b, $values + [BitConverter]::ToInt32($b, $e + 12), [BitConverter]::ToInt32($b, $e + 4))
+            return $text.TrimEnd([char]0).Trim()
+        }
+    } catch { }
+    return ''
+}
+
+# Whether BBPort shows its Quit to Desktop entries, as BBPort decides: this
+# BBPort has the feature (scripts\quit_menu.py), bbport.ini quit_to_desktop
+# isn't 0, and the game is version 1.09 (or its version can't be read).
+function Test-PortQuitToDesktop([string]$port, [string]$game) {
+    if (-not [IO.File]::Exists([IO.Path]::Combine($port, 'scripts', 'quit_menu.py'))) { return $false }
+    $ini = [IO.Path]::Combine((Get-PortDataFolder $port), 'bbport.ini')
+    if ($env:BB_CONFIG -and $env:BB_CONFIG.Trim()) { $ini = $env:BB_CONFIG.Trim() }
+    try {
+        if ([IO.File]::Exists($ini)) {
+            foreach ($line in [IO.File]::ReadAllLines($ini)) {
+                if ($line.Trim() -cmatch '^quit_to_desktop=(.*)$') {
+                    if ($Matches[1] -eq '0') { return $false }
+                    break
+                }
+            }
+        }
+    } catch { }
+    $version = Get-GameVersion $game
+    return (-not $version -or $version -eq '01.09')
 }
 
 # Text of a TOML "basic string" (backslash escapes).
@@ -453,14 +569,19 @@ function Write-Fmg($fmg) {
 
 # Copies menu.msgbnd.dcx from $source to $target, renaming language entries in
 # its text table 200: entry copyTo[i] receives the text of entry copyFrom[i]
-# (after the name fixes are applied).
-function Update-MenuLabels([string]$source, [string]$target, [int[]]$copyTo, [int[]]$copyFrom, $fixes) {
+# (after the name fixes are applied). $texts (Fmg = text table, Id = entry,
+# Text) are then set, adding the entry if the table doesn't have it.
+function Update-MenuLabels([string]$source, [string]$target, [int[]]$copyTo, [int[]]$copyFrom, $fixes, $texts) {
     $dcxData = Read-Dcx $source
     $bnd = Read-Bnd4 $dcxData.Raw
-    $table = $null
-    foreach ($f in $bnd.Files) { if ($f.Id -eq 200) { $table = $f; break } }
-    if ($null -eq $table) { throw 'Menu text table (200) not found.' }
-    $fmg = Read-Fmg $table.Data
+    $tables = @{}
+    foreach ($f in $bnd.Files) { if (-not $tables.ContainsKey([int]$f.Id)) { $tables[[int]$f.Id] = $f } }
+    if (-not $tables.ContainsKey(200)) { throw 'Menu text table (200) not found.' }
+    $fmgs = @{}
+    foreach ($id in @(@(200) + @($texts | Where-Object { $null -ne $_ } | ForEach-Object { [int]$_.Fmg }) | Sort-Object -Unique)) {
+        if ($tables.ContainsKey($id)) { $fmgs[$id] = Read-Fmg $tables[$id].Data }
+    }
+    $fmg = $fmgs[200]
     $index = @{}
     for ($k = 0; $k -lt $fmg.Ids.Count; $k++) { $index[[int]$fmg.Ids[$k]] = $k }
     foreach ($fix in $fixes) {
@@ -475,7 +596,21 @@ function Update-MenuLabels([string]$source, [string]$target, [int[]]$copyTo, [in
     for ($i = 0; $i -lt $copyTo.Length; $i++) {
         if ($null -ne $values[$i] -and $index.ContainsKey($copyTo[$i])) { $fmg.Strings[$index[$copyTo[$i]]] = $values[$i] }
     }
-    $table.Data = Write-Fmg $fmg
+    foreach ($t in @($texts)) {
+        if ($null -eq $t -or -not $fmgs.ContainsKey([int]$t.Fmg)) { continue }
+        $table = $fmgs[[int]$t.Fmg]
+        $at = $table.Ids.IndexOf([int]$t.Id)
+        if ($at -ge 0) {
+            $table.Strings[$at] = $t.Text
+        } else {
+            # Entries stay sorted by id
+            $at = 0
+            while ($at -lt $table.Ids.Count -and [int]$table.Ids[$at] -lt [int]$t.Id) { $at++ }
+            $table.Ids.Insert($at, [int]$t.Id)
+            $table.Strings.Insert($at, [string]$t.Text)
+        }
+    }
+    foreach ($id in $fmgs.Keys) { $tables[$id].Data = Write-Fmg $fmgs[$id] }
     $rebuilt = Write-Bnd4 $dcxData.Raw $bnd.HeadersEnd $bnd.Files
     Write-Dcx $target $dcxData.Header $rebuilt
 }
@@ -494,19 +629,28 @@ function Invoke-Main {
     Say (T 'Tu juego no se modifica: se crea un mod aparte.' 'Your game is not modified: a separate mod is created.') 'Cyan'
     Say ''
 
-    # 1. BBLauncher: next to this installer (or a few folders above it), or ask
+    # 1. BBLauncher or BBPort: next to this installer (or a few folders above
+    #    it), or ask. If both are found, the one closer to the installer wins.
     $launcher = Find-Launcher $here 4
-    if (-not $launcher -and -not $GameFolder) {
-        Say (T 'No encontré BBLauncher junto a este instalador.' "BBLauncher wasn't found next to this installer.") 'Yellow'
+    $port = Find-Port $here 4
+    if ($launcher -and $port) {
+        if ($port.Length -ge [IO.Path]::GetDirectoryName($launcher).Length) { $launcher = '' } else { $port = '' }
+    }
+    if (-not $launcher -and -not $port -and -not $GameFolder) {
+        Say (T 'No encontré BBLauncher ni BBPort junto a este instalador.' "BBLauncher or BBPort wasn't found next to this installer.") 'Yellow'
         while ($true) {
-            $picked = Select-Folder (T 'Elige tu carpeta de BBLauncher (la que tiene BB_Launcher.exe). Si no usas BBLauncher, da clic en Cancelar.' `
-                                       'Select your BBLauncher folder (the one with BB_Launcher.exe). If you don''t use BBLauncher, click Cancel.') ([IO.Path]::GetDirectoryName($here))
+            $picked = Select-Folder (T 'Elige tu carpeta de BBLauncher (la que tiene BB_Launcher.exe) o de BBPort (la que tiene Bloodborne.exe). Si no usas ninguno, da clic en Cancelar.' `
+                                       'Select your BBLauncher folder (the one with BB_Launcher.exe) or your BBPort folder (the one with Bloodborne.exe). If you use neither, click Cancel.') ([IO.Path]::GetDirectoryName($here))
             if ([string]::IsNullOrWhiteSpace($picked)) { break }
-            $launcher = Find-Launcher $picked.Trim().Trim('"') 2
-            if ($launcher) { break }
-            Say ((T 'En esa carpeta no está BB_Launcher.exe: {0}' "BB_Launcher.exe isn't in that folder: {0}") -f $picked) 'Yellow'
+            $picked = $picked.Trim().Trim('"')
+            $launcher = Find-Launcher $picked 2
+            if (-not $launcher) { $port = Find-Port $picked 2 }
+            if ($launcher -or $port) { break }
+            Say ((T 'En esa carpeta no está BB_Launcher.exe ni Bloodborne.exe: {0}' "Neither BB_Launcher.exe nor Bloodborne.exe is in that folder: {0}") -f $picked) 'Yellow'
         }
     }
+    $portSettings = $null
+    if ($port) { $portSettings = Get-PortSettings }
     if ($launcher) {
         Say ((T 'BBLauncher: {0}' 'BBLauncher: {0}') -f [IO.Path]::GetDirectoryName($launcher))
         # Rebuilding the pack while BBLauncher has it active would mix old and new files
@@ -516,11 +660,13 @@ function Invoke-Main {
                     'The pack is active in BBLauncher. Deactivate it first (Mod Manager > Active Mods > "{0}" > Deactivate Mod), then run the installer again.') -f $script:ModName) 'Yellow'
             return
         }
+    } elseif ($port) {
+        Say ((T 'BBPort: {0}' 'BBPort: {0}') -f $port)
     } else {
-        Say (T 'Sin BBLauncher: el mod se creará junto a este instalador.' 'Without BBLauncher: the mod will be created next to this installer.')
+        Say (T 'Sin BBLauncher ni BBPort: el mod se creará junto a este instalador.' 'Without BBLauncher or BBPort: the mod will be created next to this installer.')
     }
 
-    # 2. Game folder: -GameFolder, else the one set in BBLauncher, else ask
+    # 2. Game folder: -GameFolder, else the one set in BBLauncher or BBPort, else ask
     $base = ''
     if ($GameFolder) {
         $base = Resolve-GameFolder $GameFolder
@@ -534,9 +680,22 @@ function Invoke-Main {
                 Show-GameProblem $fromLauncher
             }
         }
+    } elseif ($port) {
+        $fromPort = Get-PortGamePath $port $portSettings
+        $base = Resolve-GameFolder $fromPort
+        if (-not $base -and $portSettings -and $portSettings.game_dir) {
+            Say ((T 'BBPort tiene este juego: {0}' 'BBPort has this game set: {0}') -f $fromPort) 'Yellow'
+            Show-GameProblem $fromPort
+        }
     }
     while (-not $base) {
-        if ($launcher) { $startAt = [IO.Path]::GetDirectoryName([IO.Path]::GetDirectoryName($launcher)) } else { $startAt = [IO.Path]::GetDirectoryName($here) }
+        if ($launcher) {
+            $startAt = [IO.Path]::GetDirectoryName([IO.Path]::GetDirectoryName($launcher))
+        } elseif ($port) {
+            $startAt = [IO.Path]::GetDirectoryName($port)
+        } else {
+            $startAt = [IO.Path]::GetDirectoryName($here)
+        }
         $picked = Select-Folder (T 'Elige la carpeta del juego (la que se llama CUSA03173)' 'Select your game folder (the one named CUSA03173)') $startAt
         if ([string]::IsNullOrWhiteSpace($picked)) {
             Say (T 'No elegiste ninguna carpeta. No se hizo nada.' 'No folder selected. Nothing was done.') 'Yellow'
@@ -596,8 +755,11 @@ function Invoke-Main {
     }
 
     # 4. Which languages can be added with this copy of the game
+    #    (BBPort: only the Latin American Spanish text, see $script:PortPack)
+    $packs = $script:Packs
+    if ($port) { $packs = @($script:PortPack) }
     $included = @()
-    foreach ($pack in $script:Packs) {
+    foreach ($pack in $packs) {
         $name = T $pack.Es $pack.En
         $item = Find-GameFile @('dvdroot_ps4', 'msg', $pack.Text, 'item.msgbnd.dcx')
         $menu = Find-GameFile @('dvdroot_ps4', 'msg', $pack.Text, 'menu.msgbnd.dcx')
@@ -635,21 +797,39 @@ function Invoke-Main {
         }
     }
 
-    $copyTo = [int[]]@($included | ForEach-Object { $_.Pack.LabelSlot })
-    $copyFrom = [int[]]@($included | ForEach-Object { $_.Pack.Label })
+    $copyTo = [int[]]@()
+    $copyFrom = [int[]]@()
     $menus = New-Object System.Collections.Generic.List[object]
-    foreach ($slot in $script:EuSlots) {
-        if (-not (Find-GameFile @('dvdroot_ps4', 'msg', $slot, 'menu.msgbnd.dcx'))) { continue }
-        $sourceLang = $slot
-        foreach ($entry in $included) { if ($entry.Pack.Slot -eq $slot) { $sourceLang = $entry.Pack.Text } }
-        $source = Find-GameFile @('dvdroot_ps4', 'msg', $sourceLang, 'menu.msgbnd.dcx')
-        if (-not $source) { continue }
-        $menus.Add([pscustomobject]@{ Source = $source; SourceLang = $sourceLang; Slot = $slot; Target = [IO.Path]::Combine('dvdroot_ps4', 'msg', $slot, 'menu.msgbnd.dcx') })
+    $quitTexts = $false
+    if ($port) {
+        # BBPort: no Language menu to rename; the menu keeps BBPort's Quit to Desktop texts
+        $quitTexts = Test-PortQuitToDesktop $port $base
+        $texts = @()
+        if ($quitTexts) { $texts = $script:PortQuitTexts }
+        foreach ($entry in $included) {
+            $menuSource = Find-GameFile @('dvdroot_ps4', 'msg', $entry.Pack.Text, 'menu.msgbnd.dcx')
+            $menus.Add([pscustomobject]@{ Source = $menuSource; SourceLang = $entry.Pack.Text; Slot = $entry.Pack.Slot; Texts = $texts; Target = [IO.Path]::Combine('dvdroot_ps4', 'msg', $entry.Pack.Slot, 'menu.msgbnd.dcx') })
+        }
+    } else {
+        $copyTo = [int[]]@($included | ForEach-Object { $_.Pack.LabelSlot })
+        $copyFrom = [int[]]@($included | ForEach-Object { $_.Pack.Label })
+        foreach ($slot in $script:EuSlots) {
+            if (-not (Find-GameFile @('dvdroot_ps4', 'msg', $slot, 'menu.msgbnd.dcx'))) { continue }
+            $sourceLang = $slot
+            foreach ($entry in $included) { if ($entry.Pack.Slot -eq $slot) { $sourceLang = $entry.Pack.Text } }
+            $source = Find-GameFile @('dvdroot_ps4', 'msg', $sourceLang, 'menu.msgbnd.dcx')
+            if (-not $source) { continue }
+            $menus.Add([pscustomobject]@{ Source = $source; SourceLang = $sourceLang; Slot = $slot; Texts = @(); Target = [IO.Path]::Combine('dvdroot_ps4', 'msg', $slot, 'menu.msgbnd.dcx') })
+        }
     }
 
-    # 6. Where the mod is created: BBLauncher\Mods, or next to this installer
+    # 6. Where the mod is created: BBLauncher\Mods, BBPort's mods folder, or next to this installer
+    $portMods = ''
     if ($launcher) {
         $output = [IO.Path]::Combine($launcher, 'Mods', $script:ModName)
+    } elseif ($port) {
+        $portMods = Get-PortModsFolder $port $portSettings
+        $output = [IO.Path]::Combine($portMods, $script:ModName)
     } else {
         $output = [IO.Path]::Combine($here, $script:ModName)
     }
@@ -676,7 +856,8 @@ function Invoke-Main {
     # 7. Copy text, fonts and voices
     $steps = $copies.Count + $menus.Count
     Say ''
-    Say ((T 'Creando el mod ({0} archivos, {1:N1} GB). Puede tardar unos minutos...' 'Building the mod ({0} files, {1:N1} GB). This can take a few minutes...') -f $steps, ($totalBytes / 1GB))
+    if ($totalBytes -ge 1GB) { $size = '{0:N1} GB' -f ($totalBytes / 1GB) } else { $size = '{0:N0} MB' -f [Math]::Max(1, [Math]::Ceiling($totalBytes / 1MB)) }
+    Say ((T 'Creando el mod ({0} archivos, {1}). Puede tardar unos minutos...' 'Building the mod ({0} files, {1}). This can take a few minutes...') -f $steps, $size)
     $activity = T 'Creando Americas Language Pack' 'Building Americas Language Pack'
     $i = 0
     foreach ($c in $copies) {
@@ -688,14 +869,15 @@ function Invoke-Main {
         [IO.File]::SetAttributes($target, [IO.FileAttributes]::Normal)
     }
 
-    # 8. Rename the language entries in every European text language
+    # 8. Menus: the language entries renamed in every European text language
+    #    (BBPort: the Spanish menu with its Quit to Desktop texts)
     foreach ($m in $menus) {
         $i++
         $target = [IO.Path]::Combine($output, $m.Target)
         [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))
-        Write-Progress -Activity $activity -Status ((T '{0} / {1}: nombres de idiomas ({2})' '{0} / {1}: language names ({2})') -f $i, $steps, $m.Slot) -PercentComplete ([int](100 * $i / $steps))
+        Write-Progress -Activity $activity -Status ((T '{0} / {1}: textos del menú ({2})' '{0} / {1}: menu texts ({2})') -f $i, $steps, $m.Slot) -PercentComplete ([int](100 * $i / $steps))
         $fixes = @($script:Fixes | Where-Object { $_.Source -eq $m.SourceLang })
-        Update-MenuLabels $m.Source $target $copyTo $copyFrom $fixes
+        Update-MenuLabels $m.Source $target $copyTo $copyFrom $fixes $m.Texts
     }
     Write-Progress -Activity $activity -Completed
     $script:Building = $null
@@ -714,6 +896,7 @@ function Invoke-Main {
             Say ((T '  + {0} (texto) - en el lugar de {1}' '  + {0} (text) - in place of {1}') -f (T $pack.Es $pack.En), (T $pack.OldEs $pack.OldEn))
         }
     }
+    if ($quitTexts) { Say (T '  Incluye "Salir al escritorio" de BBPort en el menú.' '  Keeps BBPort''s "Quit to Desktop" in the menu.') }
     if ($update) { Say ((T '  Usé primero los archivos de tu update ({0}).' '  Files from your update folder were used first ({0}).') -f [IO.Path]::GetFileName($update)) }
 
     if ($launcher) {
@@ -731,40 +914,91 @@ function Invoke-Main {
             }
         }
     }
+    if ($port) {
+        # Other mods that also change the Spanish (Spain) files: in BBPort the lower one in the list wins
+        try {
+            $others = @([IO.Directory]::GetDirectories($portMods) | Where-Object {
+                ([IO.Path]::GetFileName($_) -ne $script:ModName) -and
+                (@([IO.Directory]::GetDirectories($_, 'spaes', [IO.SearchOption]::AllDirectories)).Count -gt 0)
+            } | ForEach-Object { [IO.Path]::GetFileName($_) })
+            if ($others.Count -gt 0) {
+                Say ''
+                Say ((T 'OJO: en la carpeta mods de BBPort hay otro mod que también cambia el español: {0}. En Mods y parches (Mods & patches) gana el que está más abajo en la lista; si no ves el español latino, desmárcalo.' `
+                        'NOTE: another mod in BBPort''s mods folder also changes Spanish: {0}. In Mods & patches the one lower in the list wins; if Latin American Spanish doesn''t show, untick it.') -f ($others -join ', ')) 'Yellow'
+            }
+        } catch { }
+        # Mods turned off in BBPort's launcher, or this mod unticked in Mods & patches
+        if ($portSettings -and ($portSettings.mods_enabled -eq $false)) {
+            Say ''
+            Say (T 'OJO: en BBPort está apagado "Cargar mods" (Load mods), en Mods y parches. Préndelo o el mod no se va a cargar.' `
+                   'NOTE: "Load mods" is off in BBPort (Mods & patches). Turn it on or the mod won''t load.') 'Yellow'
+        }
+        try {
+            $modListFile = [IO.Path]::Combine((Get-PortDataFolder $port), 'mods.json')
+            if ([IO.File]::Exists($modListFile)) {
+                $modList = [IO.File]::ReadAllText($modListFile) | ConvertFrom-Json
+                if (@($modList.disabled) -contains $script:ModName) {
+                    Say ''
+                    Say ((T 'OJO: "{0}" está desmarcado en Mods y parches (Mods & patches) de BBPort. Márcalo para que se cargue.' `
+                            'NOTE: "{0}" is unticked in BBPort''s Mods & patches. Tick it so it loads.') -f $script:ModName) 'Yellow'
+                }
+            }
+        } catch { }
+    }
 
     Say ''
     Say (T 'Ahora:' 'Next steps:') 'Cyan'
-    if ($launcher) {
-        Say ((T '  1. Abre BBLauncher > Mod Manager > en Inactive Mods elige "{0}" > Activate Mod.' `
-                '  1. Open BBLauncher > Mod Manager > under Inactive Mods select "{0}" > Activate Mod.') -f $script:ModName)
-        Say (T '     (Si el Mod Manager ya estaba abierto, ciérralo y ábrelo otra vez.)' `
-               '     (If the Mod Manager was already open, close it and open it again.)')
+    if ($port) {
+        Say (T '  1. Abre BBPort (Bloodborne.exe) > Juego y efectos (Game & effects) > Text language: Español (Spanish). Con el mod sale en español latino.' `
+               '  1. Open BBPort (Bloodborne.exe) > Game & effects > Text language: Spanish. With the mod it shows Latin American Spanish.')
+        Say (T '  2. Voice language: Español (América). Las voces latinas ya vienen en BBPort.' `
+               '  2. Voice language: Español (América). BBPort already has the Latin American voices.')
+        Say ((T '  3. En Mods y parches (Mods & patches) revisa que "{0}" esté marcado (si el launcher ya estaba abierto, da clic en Actualizar / Refresh).' `
+                '  3. In Mods & patches, check that "{0}" is ticked (if the launcher was already open, click Refresh).') -f $script:ModName)
+        Say (T '     Para volver al español de España, desmárcalo. El portugués de Brasil ya viene en BBPort: elígelo en Text language y Voice language.' `
+               '     To go back to Spanish (Spain), untick it. BBPort already has Brazilian Portuguese: choose it in Text language and Voice language.')
     } else {
-        Say ((T '  1. Copia la carpeta dvdroot_ps4 de "{0}" a la carpeta "{1}" (créala si no existe; ver README.txt).' `
-                '  1. Copy the dvdroot_ps4 folder from "{0}" into "{1}" (create it if it doesn''t exist; see README.txt).') -f $output, ($base + '-mods'))
+        if ($launcher) {
+            Say ((T '  1. Abre BBLauncher > Mod Manager > en Inactive Mods elige "{0}" > Activate Mod.' `
+                    '  1. Open BBLauncher > Mod Manager > under Inactive Mods select "{0}" > Activate Mod.') -f $script:ModName)
+            Say (T '     (Si el Mod Manager ya estaba abierto, ciérralo y ábrelo otra vez.)' `
+                   '     (If the Mod Manager was already open, close it and open it again.)')
+        } else {
+            Say ((T '  1. Copia la carpeta dvdroot_ps4 de "{0}" a la carpeta "{1}" (créala si no existe; ver README.txt).' `
+                    '  1. Copy the dvdroot_ps4 folder from "{0}" into "{1}" (create it if it doesn''t exist; see README.txt).') -f $output, ($base + '-mods'))
+        }
+        Say (T '  2. En el juego: OPTIONS > Sistema > Idioma > elige tu idioma en Texto y en Voz ("Predeterminado" no los elige solo).' `
+               '  2. In the game: OPTIONS > System > Language > pick your language for Text and Voice ("Default" won''t pick them).')
+        Say (T '     Inglés (Estados Unidos) es solo texto: en Voz deja "Inglés (Reino Unido)", es el mismo doblaje.' `
+               '     English (United States) is text only: for Voice keep "English (United Kingdom)", it''s the same dub.')
+        Say (T '  3. Para el online deja APAGADOS los parches "Unlock Game Region" y "Disable HTTP Requests".' `
+               '  3. For online play keep the "Unlock Game Region" and "Disable HTTP Requests" patches OFF.')
     }
-    Say (T '  2. En el juego: OPTIONS > Sistema > Idioma > elige tu idioma en Texto y en Voz ("Predeterminado" no los elige solo).' `
-           '  2. In the game: OPTIONS > System > Language > pick your language for Text and Voice ("Default" won''t pick them).')
-    Say (T '     Inglés (Estados Unidos) es solo texto: en Voz deja "Inglés (Reino Unido)", es el mismo doblaje.' `
-           '     English (United States) is text only: for Voice keep "English (United Kingdom)", it''s the same dub.')
-    Say (T '  3. Para el online deja APAGADOS los parches "Unlock Game Region" y "Disable HTTP Requests".' `
-           '  3. For online play keep the "Unlock Game Region" and "Disable HTTP Requests" patches OFF.')
     Say ''
-    if ($launcher) {
+    if ($launcher -or $port) {
+        if ($launcher) { $where = 'BBLauncher' } else { $where = 'BBPort' }
         # The installer's own folder can go; if its files sit loose among other files, only they can
         $own = @('INSTALL - Americas Language Pack.bat', 'Americas_Language_Pack.ps1', 'README.txt')
         $notOurs = @([IO.Directory]::GetFileSystemEntries($here) | Where-Object { $own -notcontains [IO.Path]::GetFileName($_) })
         if ($notOurs.Count -eq 0) {
-            Say ((T 'Ya puedes borrar la carpeta del instalador ("{0}"): el mod ya quedó en BBLauncher y no la necesita.' `
-                    'You can delete the installer folder now ("{0}"): the mod is already in BBLauncher and does not need it.') -f [IO.Path]::GetFileName($here)) 'Green'
+            Say ((T 'Ya puedes borrar la carpeta del instalador ("{0}"): el mod ya quedó en {1} y no la necesita.' `
+                    'You can delete the installer folder now ("{0}"): the mod is already in {1} and does not need it.') -f [IO.Path]::GetFileName($here), $where) 'Green'
         } else {
             Say (T 'Ya puedes borrar los archivos del instalador (INSTALL - Americas Language Pack.bat, Americas_Language_Pack.ps1 y README.txt): el mod no los necesita.' `
                    'You can delete the installer files now (INSTALL - Americas Language Pack.bat, Americas_Language_Pack.ps1 and README.txt): the mod does not need them.') 'Green'
         }
-        $modsPrefix = [IO.Path]::Combine($launcher, 'Mods') + [IO.Path]::DirectorySeparatorChar
-        if ($here.StartsWith($modsPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-            Say (T 'OJO: este instalador está dentro de BBLauncher\Mods. Bórralo de ahí para que no salga como mod en el Mod Manager.' `
-                   'NOTE: this installer is inside BBLauncher\Mods. Delete it from there so it does not show up as a mod in the Mod Manager.') 'Yellow'
+        if ($launcher) {
+            $modsPrefix = [IO.Path]::Combine($launcher, 'Mods') + [IO.Path]::DirectorySeparatorChar
+            if ($here.StartsWith($modsPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+                Say (T 'OJO: este instalador está dentro de BBLauncher\Mods. Bórralo de ahí para que no salga como mod en el Mod Manager.' `
+                       'NOTE: this installer is inside BBLauncher\Mods. Delete it from there so it does not show up as a mod in the Mod Manager.') 'Yellow'
+            }
+        } else {
+            $modsPrefix = $portMods.TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            if ($here.StartsWith($modsPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+                Say (T 'OJO: este instalador está dentro de la carpeta mods de BBPort. Bórralo de ahí para que no salga en la lista de mods de BBPort.' `
+                       'NOTE: this installer is inside BBPort''s mods folder. Delete it from there so it does not show up in BBPort''s mod list.') 'Yellow'
+            }
         }
     } else {
         Say (T 'Cuando hayas copiado el mod, puedes borrar este instalador.' 'Once you have copied the mod, you can delete this installer.') 'Green'
