@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Americas Language Pack v1.1 for Bloodborne on shadPS4 (+ BBLauncher) or BBPort.
+    Americas Language Pack v1.2 for Bloodborne on shadPS4 (+ BBLauncher) or BBPort.
 
 .DESCRIPTION
     Adds Latin American Spanish, Brazilian Portuguese and US English to the
@@ -19,11 +19,11 @@
     It reads the game files and writes a new mod folder for BBLauncher.
     The game folder itself is never changed.
 
-    BBPort (the native Windows port) has no Language menu in the game: its
-    launcher sets the language. There the script writes a text-only mod to
-    BBPort's mods folder that puts Latin American Spanish text in place of
-    Spanish (Spain). BBPort already has the Latin American Spanish voices
-    and Brazilian Portuguese.
+    On BBPort (the native Windows port) the language is set in its launcher.
+    There the script writes a text-only mod to BBPort's mods folder that puts
+    Latin American Spanish text in place of Spanish (Spain), with the texts
+    BBPort adds to the menu (Quit to Desktop, Rebirth at the Doll). BBPort
+    already has the Latin American Spanish voices and Brazilian Portuguese.
 
 .EXAMPLE
     Double-click "INSTALL - Americas Language Pack.bat" in this folder.
@@ -31,7 +31,7 @@
 
 .NOTES
     Created by Rammsiris - Game Developer
-    Version 1.1
+    Version 1.2
 #>
 param(
     [string]$GameFolder = '',
@@ -41,7 +41,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $script:ModName    = 'Americas Language Pack'
-$script:ModVersion = '1.1'
+$script:ModVersion = '1.2'
 $script:Author     = 'Rammsiris'
 $script:ActiveName = 'Mods-Active (DO NOT DELETE)'
 $script:Building   = $null
@@ -56,31 +56,20 @@ $script:Packs = @(
     [pscustomobject]@{ Es = 'Inglés (Estados Unidos)'; En = 'English (United States)'; Text = 'engus'; Voice = $null; Slot = 'dandk'; SlotVoice = $null; LabelSlot = 115112; Label = 115108; OldEs = 'Danés';    OldEn = 'Danish' }
 )
 
-# BBPort sets the text language in its launcher and has no Language menu in
-# the game, so there only the Latin American Spanish text is added, in place
-# of Spanish (Spain): "Spanish" in BBPort's launcher then shows it.
-$script:PortPack = [pscustomobject]@{ Es = 'Español (Latinoamérica)'; En = 'Spanish (Latin America)'; Text = 'spaar'; Voice = $null; Slot = 'spaes'; SlotVoice = $null; OldEs = 'Español (España)'; OldEn = 'Spanish (Spain)' }
-
-# BBPort's "Quit to Desktop" (on by default, game version 1.09) turns two menu
-# entries into Quit to Desktop and writes their texts into every language's
-# menu, in a layer below the mods. The Spanish menu of this pack carries the
-# same texts (BBPort's own), or those entries would keep their old names
-# ("Idioma", "Cuadro de opinión"). Fmg: 200 entries, 201 help line, 204 dialogs.
-$script:PortQuitTexts = @(
-    [pscustomobject]@{ Fmg = 200; Id = 401307; Text = 'Salir al escritorio' },
-    [pscustomobject]@{ Fmg = 200; Id = 110005; Text = 'Salir al escritorio' },
-    [pscustomobject]@{ Fmg = 201; Id = 401307; Text = 'Cerrar el juego.' },
-    [pscustomobject]@{ Fmg = 201; Id = 110005; Text = 'Guardar y cerrar el juego.' },
-    [pscustomobject]@{ Fmg = 204; Id = 110005; Text = '¿Salir del juego y volver al escritorio?' }
-)
+# BBPort sets the text language in its launcher, so there only the Latin
+# American Spanish text is added, in place of Spanish (Spain): "Spanish" in
+# BBPort's launcher then shows it (and the game's Language list says so).
+$script:PortPack = [pscustomobject]@{ Es = 'Español (Latinoamérica)'; En = 'Spanish (Latin America)'; Text = 'spaar'; Voice = $null; Slot = 'spaes'; SlotVoice = $null; LabelSlot = 115105; Label = 115106; OldEs = 'Español (España)'; OldEn = 'Spanish (Spain)' }
 
 # Text languages listed in the European Language menu (their language names get renamed too).
 $script:EuSlots = @('enggb', 'frafr', 'itait', 'deude', 'spaes', 'nldnl', 'polpl', 'rusru', 'dandk', 'norno', 'finfi', 'swese', 'turtr', 'porpt')
 
 # Small fixes in the official language names:
-#   Latin American Spanish calls Polish "Pulir" (to polish); English writes "Brasil".
+#   Latin American Spanish calls Polish "Pulir" (to polish) and leaves German in
+#   English; English writes "Brasil".
 $script:Fixes = @(
     [pscustomobject]@{ Source = 'spaar'; Id = 115110; Old = 'Pulir';               New = 'Polaco' },
+    [pscustomobject]@{ Source = 'spaar'; Id = 115104; Old = 'German';              New = 'Alemán' },
     [pscustomobject]@{ Source = 'enggb'; Id = 115107; Old = 'Portuguese (Brasil)'; New = 'Portuguese (Brazil)' },
     [pscustomobject]@{ Source = 'engus'; Id = 115107; Old = 'Portuguese (Brasil)'; New = 'Portuguese (Brazil)' }
 )
@@ -216,17 +205,24 @@ function Get-GameVersion([string]$game) {
     return ''
 }
 
-# Whether BBPort shows its Quit to Desktop entries, as BBPort decides: this
-# BBPort has the feature (scripts\quit_menu.py), bbport.ini quit_to_desktop
-# isn't 0, and the game is version 1.09 (or its version can't be read).
-function Test-PortQuitToDesktop([string]$port, [string]$game) {
-    if (-not [IO.File]::Exists([IO.Path]::Combine($port, 'scripts', 'quit_menu.py'))) { return $false }
+# =============================================================================
+#  BBPort's own menu texts
+#  Some BBPort features add texts to every language's menu (Quit to Desktop,
+#  Rebirth at the Doll), in layers that BBPort writes at each start below the
+#  mods. The Spanish menu of this pack has to carry them too.
+# =============================================================================
+
+# Whether a BBPort feature that adds menu texts is on, as BBPort decides at
+# each start: this BBPort has its script (scripts\<script>), bbport.ini doesn't
+# set <key>=0, and the game is version 1.09 (or its version can't be read).
+function Test-PortFeature([string]$port, [string]$game, [string]$script, [string]$key) {
+    if (-not [IO.File]::Exists([IO.Path]::Combine($port, 'scripts', $script))) { return $false }
     $ini = [IO.Path]::Combine((Get-PortDataFolder $port), 'bbport.ini')
     if ($env:BB_CONFIG -and $env:BB_CONFIG.Trim()) { $ini = $env:BB_CONFIG.Trim() }
     try {
         if ([IO.File]::Exists($ini)) {
             foreach ($line in [IO.File]::ReadAllLines($ini)) {
-                if ($line.Trim() -cmatch '^quit_to_desktop=(.*)$') {
+                if ($line.Trim() -cmatch ('^' + [regex]::Escape($key) + '=(.*)$')) {
                     if ($Matches[1] -eq '0') { return $false }
                     break
                 }
@@ -235,6 +231,66 @@ function Test-PortQuitToDesktop([string]$port, [string]$game) {
     } catch { }
     $version = Get-GameVersion $game
     return (-not $version -or $version -eq '01.09')
+}
+
+# Quit to Desktop's Spanish texts and where they go (Fmg = text table: 200
+# entries, 201 help line, 204 dialogs; Id = entry), read from this BBPort's
+# scripts\quit_menu.py: the System menu's entry moved from 110005 to 110006 in
+# BBPort 1.9.3. Empty if that file isn't there or its ids can't be read.
+function Get-PortQuitTexts([string]$port) {
+    try {
+        $code = [IO.File]::ReadAllText([IO.Path]::Combine($port, 'scripts', 'quit_menu.py'))
+    } catch {
+        return @()
+    }
+    $ids = [regex]::Match($code, '(?m)^\s*TITLE_ID\s*,\s*SYSTEM_ID\s*,\s*DIALOG_ID\s*=\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)')
+    if (-not $ids.Success) { return @() }
+    $title = [int]$ids.Groups[1].Value
+    $system = [int]$ids.Groups[2].Value
+    $dialog = [int]$ids.Groups[3].Value
+    $words = @('Salir al escritorio', 'Cerrar el juego.', 'Guardar y cerrar el juego.', '¿Salir del juego y volver al escritorio?')
+    $found = [regex]::Match($code, "'spaes'\s*:\s*\(\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'\s*\)")
+    if ($found.Success) { $words = @($found.Groups[1].Value, $found.Groups[2].Value, $found.Groups[3].Value, $found.Groups[4].Value) }
+    return @(
+        [pscustomobject]@{ Fmg = 200; Id = $title;  Text = $words[0] },
+        [pscustomobject]@{ Fmg = 200; Id = $system; Text = $words[0] },
+        [pscustomobject]@{ Fmg = 201; Id = $title;  Text = $words[1] },
+        [pscustomobject]@{ Fmg = 201; Id = $system; Text = $words[2] },
+        [pscustomobject]@{ Fmg = 204; Id = $dialog; Text = $words[3] }
+    )
+}
+
+# Where Rebirth at the Doll (BBPort 1.9.4) puts its choice's name (Fmg, Id),
+# read from this BBPort's scripts\rebirth.py, or $null.
+function Get-PortRebirthText([string]$port) {
+    try {
+        $code = [IO.File]::ReadAllText([IO.Path]::Combine($port, 'scripts', 'rebirth.py'))
+    } catch {
+        return $null
+    }
+    $option = [regex]::Match($code, '(?m)^\s*OPTION_TEXT\s*,[^=\r\n]*=\s*(\d+)')
+    $table = [regex]::Match($code, '(?m)^\s*TALK_FMG\s*=\s*(\d+)')
+    if (-not $option.Success -or -not $table.Success) { return $null }
+    return [pscustomobject]@{ Fmg = [int]$table.Groups[1].Value; Id = [int]$option.Groups[1].Value }
+}
+
+# The menu text archives of a language that BBPort wrote with the texts its
+# features add (<data>\out\<layer>\dvdroot_ps4\msg\<language>\menu.msgbnd.dcx,
+# written again each time the game starts), newest first; when the times are
+# the same (coarse clocks on FAT drives) the bigger first, as each layer builds
+# on the one before. BBPort's temporary game views (out\mod-game-*) are left out.
+function Find-PortTextLayers([string]$data, [string]$language) {
+    $out = [IO.Path]::Combine($data, 'out')
+    if (-not [IO.Directory]::Exists($out)) { return @() }
+    $found = @()
+    foreach ($dir in [IO.Directory]::GetDirectories($out)) {
+        if ([IO.Path]::GetFileName($dir) -like 'mod-game-*') { continue }
+        $file = [IO.Path]::Combine($dir, 'dvdroot_ps4', 'msg', $language, 'menu.msgbnd.dcx')
+        if (-not [IO.File]::Exists($file)) { continue }
+        $info = New-Object IO.FileInfo($file)
+        $found += [pscustomobject]@{ Path = $file; Time = $info.LastWriteTimeUtc; Size = $info.Length }
+    }
+    return @($found | Sort-Object -Property @{ Expression = 'Time'; Descending = $true }, @{ Expression = 'Size'; Descending = $true } | ForEach-Object { $_.Path })
 }
 
 # Text of a TOML "basic string" (backslash escapes).
@@ -567,6 +623,43 @@ function Write-Fmg($fmg) {
     return ,$b
 }
 
+# The text of entry $id in a text table read with Read-Fmg, or $null.
+function Get-FmgText($fmg, [int]$id) {
+    $at = $fmg.Ids.IndexOf($id)
+    if ($at -lt 0) { return $null }
+    return $fmg.Strings[$at]
+}
+
+# Whether a menu text archive BBPort wrote fits this BBPort and its settings
+# now: written after BBPort's scripts were last updated, and with Quit to
+# Desktop's and Rebirth's texts exactly when those features are on. If not,
+# it is from another version of BBPort or from before its options changed.
+function Test-PortTextLayer([string]$file, [string]$port, [bool]$quitOn, $quitTexts, [bool]$rebirthOn, $rebirthText) {
+    $scripts = [IO.Path]::Combine($port, 'scripts')
+    if ([IO.Directory]::Exists($scripts)) {
+        $written = [IO.File]::GetLastWriteTimeUtc($file)
+        foreach ($script in [IO.Directory]::GetFiles($scripts, '*.py')) {
+            if ([IO.File]::GetLastWriteTimeUtc($script) -gt $written) { return $false }
+        }
+    }
+    $bnd = Read-Bnd4 (Read-Dcx $file).Raw
+    $tables = @{}
+    foreach ($f in $bnd.Files) { if (-not $tables.ContainsKey([int]$f.Id)) { $tables[[int]$f.Id] = $f } }
+    if (@($quitTexts).Count -ge 2 -and $tables.ContainsKey(200)) {
+        # Quit to Desktop's entries (title menu and System menu) have the same name
+        $menu = Read-Fmg $tables[200].Data
+        $titleName = Get-FmgText $menu $quitTexts[0].Id
+        $hasQuit = [bool]$titleName -and ($titleName -ceq (Get-FmgText $menu $quitTexts[1].Id))
+        if ($hasQuit -ne $quitOn) { return $false }
+    }
+    if ($rebirthText -and $tables.ContainsKey([int]$rebirthText.Fmg)) {
+        $talk = Read-Fmg $tables[[int]$rebirthText.Fmg].Data
+        $hasRebirth = [bool](Get-FmgText $talk $rebirthText.Id)
+        if ($hasRebirth -ne $rebirthOn) { return $false }
+    }
+    return $true
+}
+
 # Copies menu.msgbnd.dcx from $source to $target, renaming language entries in
 # its text table 200: entry copyTo[i] receives the text of entry copyFrom[i]
 # (after the name fixes are applied). $texts (Fmg = text table, Id = entry,
@@ -797,22 +890,43 @@ function Invoke-Main {
         }
     }
 
-    $copyTo = [int[]]@()
-    $copyFrom = [int[]]@()
+    $copyTo = [int[]]@($included | ForEach-Object { $_.Pack.LabelSlot })
+    $copyFrom = [int[]]@($included | ForEach-Object { $_.Pack.Label })
     $menus = New-Object System.Collections.Generic.List[object]
-    $quitTexts = $false
+    $portLayer = ''
+    $portTexts = $false
+    $portNote = $false
     if ($port) {
-        # BBPort: no Language menu to rename; the menu keeps BBPort's Quit to Desktop texts
-        $quitTexts = Test-PortQuitToDesktop $port $base
+        # BBPort: the Latin American menu with the texts BBPort's features add to
+        # it. BBPort's own copy (written when the game last started) if it fits
+        # this BBPort and its settings; else the game's, with Quit to Desktop's.
+        $quitOn = Test-PortFeature $port $base 'quit_menu.py' 'quit_to_desktop'
+        $rebirthOn = Test-PortFeature $port $base 'rebirth.py' 'rebirth'
+        $quitTexts = @(Get-PortQuitTexts $port)
+        $rebirthText = Get-PortRebirthText $port
+        $layers = @()
+        try { $layers = @(Find-PortTextLayers (Get-PortDataFolder $port) $script:PortPack.Text) } catch { $layers = @() }
+        foreach ($layer in $layers) {
+            try { $fits = Test-PortTextLayer $layer $port $quitOn $quitTexts $rebirthOn $rebirthText } catch { $fits = $false }
+            if ($fits) {
+                $portLayer = $layer
+                break
+            }
+        }
         $texts = @()
-        if ($quitTexts) { $texts = $script:PortQuitTexts }
+        if ($portLayer) {
+            $portTexts = $quitOn -or $rebirthOn
+        } else {
+            if ($quitOn) { $texts = $quitTexts }
+            $portTexts = $texts.Count -gt 0
+            $portNote = $rebirthOn -or ($quitOn -and $texts.Count -eq 0)
+        }
         foreach ($entry in $included) {
-            $menuSource = Find-GameFile @('dvdroot_ps4', 'msg', $entry.Pack.Text, 'menu.msgbnd.dcx')
+            $menuSource = $portLayer
+            if (-not $menuSource) { $menuSource = Find-GameFile @('dvdroot_ps4', 'msg', $entry.Pack.Text, 'menu.msgbnd.dcx') }
             $menus.Add([pscustomobject]@{ Source = $menuSource; SourceLang = $entry.Pack.Text; Slot = $entry.Pack.Slot; Texts = $texts; Target = [IO.Path]::Combine('dvdroot_ps4', 'msg', $entry.Pack.Slot, 'menu.msgbnd.dcx') })
         }
     } else {
-        $copyTo = [int[]]@($included | ForEach-Object { $_.Pack.LabelSlot })
-        $copyFrom = [int[]]@($included | ForEach-Object { $_.Pack.Label })
         foreach ($slot in $script:EuSlots) {
             if (-not (Find-GameFile @('dvdroot_ps4', 'msg', $slot, 'menu.msgbnd.dcx'))) { continue }
             $sourceLang = $slot
@@ -896,7 +1010,7 @@ function Invoke-Main {
             Say ((T '  + {0} (texto) - en el lugar de {1}' '  + {0} (text) - in place of {1}') -f (T $pack.Es $pack.En), (T $pack.OldEs $pack.OldEn))
         }
     }
-    if ($quitTexts) { Say (T '  Incluye "Salir al escritorio" de BBPort en el menú.' '  Keeps BBPort''s "Quit to Desktop" in the menu.') }
+    if ($portTexts) { Say (T '  Con los textos que BBPort agrega al menú (como "Salir al escritorio").' '  With the texts BBPort adds to the menu (like "Quit to Desktop").') }
     if ($update) { Say ((T '  Usé primero los archivos de tu update ({0}).' '  Files from your update folder were used first ({0}).') -f [IO.Path]::GetFileName($update)) }
 
     if ($launcher) {
@@ -949,14 +1063,23 @@ function Invoke-Main {
     Say ''
     Say (T 'Ahora:' 'Next steps:') 'Cyan'
     if ($port) {
-        Say (T '  1. Abre BBPort (Bloodborne.exe) > Juego y efectos (Game & effects) > Text language: Español (Spanish). Con el mod sale en español latino.' `
-               '  1. Open BBPort (Bloodborne.exe) > Game & effects > Text language: Spanish. With the mod it shows Latin American Spanish.')
+        # BBPort 1.9.3 moved the languages from "Game & effects" to "Gameplay" (and Quit to Desktop's entry to 110006)
+        if (@($quitTexts).Count -ge 2 -and $quitTexts[1].Id -ne 110005) { $page = 'Gameplay' } else { $page = T 'Juego y efectos (Game & effects)' 'Game & effects' }
+        Say ((T '  1. Abre BBPort (Bloodborne.exe) > {0} > Text language: Español (Spanish). Con el mod sale en español latino.' `
+                '  1. Open BBPort (Bloodborne.exe) > {0} > Text language: Spanish. With the mod it shows Latin American Spanish.') -f $page)
         Say (T '  2. Voice language: Español (América). Las voces latinas ya vienen en BBPort.' `
                '  2. Voice language: Español (América). BBPort already has the Latin American voices.')
         Say ((T '  3. En Mods y parches (Mods & patches) revisa que "{0}" esté marcado (si el launcher ya estaba abierto, da clic en Actualizar / Refresh).' `
                 '  3. In Mods & patches, check that "{0}" is ticked (if the launcher was already open, click Refresh).') -f $script:ModName)
         Say (T '     Para volver al español de España, desmárcalo. El portugués de Brasil ya viene en BBPort: elígelo en Text language y Voice language.' `
                '     To go back to Spanish (Spain), untick it. BBPort already has Brazilian Portuguese: choose it in Text language and Voice language.')
+        Say (T '  4. Cada vez que actualices BBPort: abre el juego una vez, ciérralo y vuelve a correr este instalador.' `
+               '  4. Each time you update BBPort: start the game once, close it and run this installer again.')
+        if ($portNote) {
+            Say ''
+            Say (T 'OJO: todavía no están los textos que BBPort agrega al menú para esta versión o con tus opciones de ahora. Abre el juego una vez desde BBPort (hasta la pantalla de título), ciérralo y vuelve a correr este instalador: así el menú del mod los incluye.' `
+                   'NOTE: the texts BBPort adds to the menu aren''t there yet for this version or for your current options. Start the game once from BBPort (up to the title screen), close it and run this installer again: then the mod''s menu has them.') 'Yellow'
+        }
     } else {
         if ($launcher) {
             Say ((T '  1. Abre BBLauncher > Mod Manager > en Inactive Mods elige "{0}" > Activate Mod.' `

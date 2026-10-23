@@ -1,10 +1,10 @@
 @echo off
-rem Americas Language Pack v1.1 - Created by Rammsiris - Game Developer
+rem Americas Language Pack v1.2 - Created by Rammsiris - Game Developer
 rem Starts the installer, Americas_Language_Pack.ps1 (same folder),
 rem with the PowerShell that comes with Windows. The path is escaped so
 rem folders with [ ] in their names work too (plain path as a fallback).
 setlocal
-title Americas Language Pack v1.1
+title Americas Language Pack v1.2
 set "ALP_SCRIPT=%~dp0Americas_Language_Pack.ps1"
 if not exist "%ALP_SCRIPT%" goto missing
 "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -Command "try { & ([WildcardPattern]::Escape($env:ALP_SCRIPT)) } catch [Management.Automation.CommandNotFoundException] { & $env:ALP_SCRIPT }"

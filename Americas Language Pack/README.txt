@@ -1,5 +1,5 @@
 ﻿==============================================================================
-  AMERICAS LANGUAGE PACK  v1.1
+  AMERICAS LANGUAGE PACK  v1.2
   for Bloodborne on shadPS4 and BBPort (Game of the Year Edition, CUSA03173)
 
   Latin American Spanish, Brazilian Portuguese and US English,
@@ -17,10 +17,10 @@
 ==============================================================================
 
 QUICK START (with BBLauncher)
-  1. Open the zip and drag the "Americas Language Pack v1.1" folder into
+  1. Open the zip and drag the "Americas Language Pack v1.2" folder into
      your BBLauncher folder (the one with BB_Launcher.exe), not into its
      Mods folder.
-  2. Open the "Americas Language Pack v1.1" folder and double-click
+  2. Open the "Americas Language Pack v1.2" folder and double-click
      "INSTALL - Americas Language Pack.bat". It finds your game by itself.
      Wait until it says DONE (or LISTO, if the window is in Spanish).
      (Americas_Language_Pack.ps1 is the installer the .bat starts: leave
@@ -29,24 +29,27 @@ QUICK START (with BBLauncher)
      "Americas Language Pack" > Activate Mod.
   4. In the game: OPTIONS > System > Language > choose your language in
      Text and in Voice. It applies when you leave that menu.
-  5. That's it. You can delete the "Americas Language Pack v1.1" folder:
+  5. That's it. You can delete the "Americas Language Pack v1.2" folder:
      the mod doesn't need it. Keep the zip (it has this README and the
      installer).
 
 QUICK START (with BBPort, the native PC port)
-  1. Open the zip and drag the "Americas Language Pack v1.1" folder into
+  1. Open the zip and drag the "Americas Language Pack v1.2" folder into
      your BBPort folder (the one with Bloodborne.exe), not into its mods
      folder.
-  2. Open the "Americas Language Pack v1.1" folder and double-click
+  2. Open the "Americas Language Pack v1.2" folder and double-click
      "INSTALL - Americas Language Pack.bat". It finds your game and puts
      the mod in BBPort's mods folder (it creates the folder if it's
      missing). Wait until it says DONE.
-  3. Open BBPort (Bloodborne.exe) > Game & effects > Text language:
-     Spanish, and Voice language: Español (América).
+  3. Open BBPort (Bloodborne.exe) > Gameplay > Text language: Spanish,
+     and Voice language: Español (América). (On BBPort 1.9.2 they're
+     under Game & effects.)
   4. Play: "Spanish" is now Latin American Spanish. You can delete the
-     "Americas Language Pack v1.1" folder. Keep the zip.
+     "Americas Language Pack v1.2" folder. Keep the zip.
   BBPort already has Brazilian Portuguese and the Latin American voices,
   so there the pack only adds the Latin American Spanish text.
+  Each time you update BBPort: start the game once, close it and run the
+  installer again (section 10).
 
   Did Windows or your antivirus complain? See section 11.
   Something else went wrong? See section 12.
@@ -79,16 +82,16 @@ CONTENTS
   Portuguese (Portugal) and the rest. Your game folder is never modified:
   the installer builds a separate mod that you turn on and off in
   BBLauncher.
-  It also fixes two small mistakes in the official language names:
-  "Polish" shows up as "Pulir" in Latin American Spanish, and "Brazil" is
-  spelled "Brasil" in English.
+  It also fixes small mistakes in the official language names: in Latin
+  American Spanish "Polish" shows up as "Pulir" and "German" stays in
+  English, and in English "Brazil" is spelled "Brasil".
 
-  On BBPort there is no Language menu in the game: you choose the
-  language in BBPort's launcher. It already has Brazilian Portuguese and
-  the Latin American voices ("Español (América)"), but its "Spanish" text
-  is the one from Spain. There the pack puts the Latin American Spanish
-  text in the place of Spanish (Spain), and keeps BBPort's
-  "Quit to Desktop" entry in the menu.
+  On BBPort you choose the language in BBPort's launcher. It already has
+  Brazilian Portuguese and the Latin American voices ("Español
+  (América)"), but its "Spanish" text is the one from Spain. There the
+  pack puts the Latin American Spanish text in the place of Spanish
+  (Spain), with the texts BBPort adds to the menu ("Quit to Desktop",
+  "Rebirth" at the Doll), taken from BBPort itself.
 
 2. WHO IT'S FOR
   Players with the European version (Game of the Year Edition, CUSA03173)
@@ -104,7 +107,7 @@ CONTENTS
   - One of these:
       shadPS4 with BBLauncher ..................... section 5
       BBPort, Supermedo's native PC port .......... section 6
-        (github.com/Supermedo/bloodborne_pc, tested with v1.9.2)
+        (github.com/Supermedo/bloodborne_pc, 1.9.2 to 1.9.4)
       shadPS4 alone ............................... section 7
   - The game as a regular folder, not a .zar archive.
   - With shadPS4: free disk space for the voice files (the installer
@@ -124,11 +127,11 @@ CONTENTS
 
 5. INSTALL WITH BBLAUNCHER (STEP BY STEP)
   1. Close the game (BBLauncher's Mod Manager doesn't work while it runs).
-  2. Open the zip and drag the "Americas Language Pack v1.1" folder into
+  2. Open the zip and drag the "Americas Language Pack v1.2" folder into
      your BBLauncher folder, the one with BB_Launcher.exe (or extract the
      zip there), not into its Mods folder. Don't run anything from inside
      the zip.
-  3. Open the "Americas Language Pack v1.1" folder and double-click
+  3. Open the "Americas Language Pack v1.2" folder and double-click
      "INSTALL - Americas Language Pack.bat". A window opens:
      - If Windows asks whether to run it, choose Run (or "More info" >
        "Run anyway"). See section 11.
@@ -153,17 +156,19 @@ CONTENTS
      "English (United Kingdom)", it is the same English dub.
   6. For online play keep the "Unlock Game Region" and
      "Disable HTTP Requests" patches OFF.
-  7. Delete the "Americas Language Pack v1.1" folder if you want: the mod
+  7. Delete the "Americas Language Pack v1.2" folder if you want: the mod
      doesn't need it. Keep the zip in case you need to run it again
      (section 10).
 
 6. INSTALL WITH BBPORT (STEP BY STEP)
-  1. Close the game.
-  2. Open the zip and drag the "Americas Language Pack v1.1" folder into
+  1. If you just installed or updated BBPort, start the game once from it
+     (up to the title screen): BBPort then writes the texts it adds to
+     the menu, and the installer takes them. Close the game.
+  2. Open the zip and drag the "Americas Language Pack v1.2" folder into
      your BBPort folder, the one with Bloodborne.exe and
      "Play Bloodborne.exe" (or extract the zip there), not into its mods
      folder. Don't run anything from inside the zip.
-  3. Open the "Americas Language Pack v1.1" folder and double-click
+  3. Open the "Americas Language Pack v1.2" folder and double-click
      "INSTALL - Americas Language Pack.bat". A window opens:
      - If Windows asks whether to run it, choose Run (section 11).
      - It reads the game folder and the mods folder set in BBPort. If you
@@ -172,21 +177,26 @@ CONTENTS
        (it creates it if it's missing).
      - If it can't find the game, it asks you to choose it: select the
        CUSA03173 folder (the one with eboot.bin and dvdroot_ps4).
+     - It takes the texts BBPort adds to the menu from BBPort itself. If
+       they're missing, or from another version of BBPort, it tells you
+       to start the game once and run it again.
      - It takes a few seconds. When it says DONE, press Enter.
   4. Open BBPort (Bloodborne.exe):
-     - Game & effects > Text language: Spanish. With the mod, "Spanish"
-       is Latin American Spanish.
+     - Gameplay > Text language: Spanish. With the mod, "Spanish" is
+       Latin American Spanish. (BBPort 1.9.2: Game & effects.)
      - Voice language: Español (América).
-     - Mods & patches: "Load mods" on and "Americas Language Pack"
-       ticked. If the launcher was already open, click Refresh.
-     If your launcher is in Spanish: Juego y efectos, Mods y parches,
-     Cargar mods, Actualizar.
+     - Mods (Mods & patches): "Load mods" on and "Americas Language
+       Pack" ticked. If the launcher was already open, click Refresh.
+     If your launcher is in Spanish: Mods y parches, Cargar mods,
+     Actualizar (Gameplay and Text language stay in English).
   5. Play. BBPort loads the mod every time you start the game.
      Brazilian Portuguese is already in BBPort: choose
      "Português (Brasil)" in Text language and in Voice language.
-  6. Delete the "Americas Language Pack v1.1" folder if you want: the mod
+  6. Delete the "Americas Language Pack v1.2" folder if you want: the mod
      doesn't need it. Keep the zip in case you need to run it again
      (section 10).
+  7. Each time you update BBPort: start the game once, close it and run
+     the installer again (section 10).
 
 7. INSTALL WITH SHADPS4 ALONE (NO BBLAUNCHER)
   1. Extract the zip anywhere and double-click
@@ -218,7 +228,9 @@ CONTENTS
   With BBPort: in the game, press OPTIONS and highlight System. The help
   line at the bottom says "Cambiar configuración del juego o salir del
   juego" (Latin American). If it says "Cambia los ajustes o sale del
-  juego." (Spain), the mod is not loaded (section 12).
+  juego." (Spain), the mod is not loaded (section 12). In the System
+  menu, BBPort's entry says "Salir al escritorio"; no entry should show
+  just a number, like (110006).
   BBPort's Log page also shows "Mods: Americas Language Pack: 3 files"
   when the game starts.
 
@@ -248,8 +260,9 @@ CONTENTS
 10. RUN IT AGAIN
   You only need the installer again if you reinstall or update the game,
   set up BBLauncher or BBPort from scratch, or get a new version of the
-  pack. On BBPort, also if you turn its "Quit to Desktop in the title menu
-  and in the System menu" option (Game & effects > Extras) on or off.
+  pack. On BBPort, also each time you update BBPort, or turn its
+  "Quit to Desktop" or "Rebirth at the Doll" options on or off: start the
+  game once (up to the title screen) and close it before you run it.
   With BBLauncher:
   1. BBLauncher > Mod Manager > under "Active Mods" select
      "Americas Language Pack" > "Deactivate Mod". (The installer won't run
@@ -257,8 +270,9 @@ CONTENTS
   2. Run the installer again (section 5, steps 2 and 3). It replaces the
      old mod.
   3. Activate it again (section 5, step 4).
-  With BBPort: close the game and run the installer again (section 6,
-  steps 2 and 3). It replaces the old mod; you don't need to untick it.
+  With BBPort: start the game once and close it, then run the installer
+  again (section 6, steps 2 and 3). It replaces the old mod; you don't
+  need to untick it.
 
 11. ANTIVIRUS AND WINDOWS WARNINGS
   Windows: files downloaded from the internet can show "Windows protected
@@ -272,15 +286,15 @@ CONTENTS
   script looks, not a known virus. Installers written as scripts are a
   common false positive.
   - You can check it yourself: open Americas_Language_Pack.ps1 with
-    Notepad. It only reads your game files and the settings of BBLauncher
-    or BBPort, and writes the mod folder. It doesn't connect to the
-    internet, doesn't change Windows settings and doesn't touch your
-    saves.
+    Notepad. It only reads your game files and the files of BBLauncher or
+    BBPort (like their settings), and writes the mod folder. It doesn't
+    connect to the internet, doesn't change Windows settings and doesn't
+    touch your saves.
   - If your antivirus blocks it, you don't need to turn off your
     protection. Add an exception just for the installer folder, restore
     the file from quarantine (or extract the zip again) and run it:
       Bitdefender: Protection > Antivirus > Settings > Manage exceptions
-      > Add an exception > choose the "Americas Language Pack v1.1"
+      > Add an exception > choose the "Americas Language Pack v1.2"
       folder > turn on all the scan options > Save. (Names may vary a
       little depending on your version.)
       Windows Security: Virus & threat protection > Protection history >
@@ -343,17 +357,25 @@ CONTENTS
     folder isn't a mod (for example the installer folder, if you put it
     inside mods). Delete it from there; the mod is the folder called
     "Americas Language Pack".
-  - On BBPort the System menu shows "Idioma" (or the title menu
-    "Cuadro de opinión") instead of "Salir al escritorio": you changed
-    BBPort's "Quit to Desktop" option after installing (run the
-    installer again, section 10), or BBLauncher's mods are loading too
-    (section 13, "I use shadPS4 and BBPort with the same game").
+  - On BBPort a menu entry shows just a number, like (110006), or
+    "Salir al escritorio" opens the Language menu: BBPort was updated, or
+    its options changed, after you installed. Start the game once, close
+    it and run the installer again (section 10). If it keeps happening,
+    BBLauncher's mods may be loading too (section 13, "I use shadPS4 and
+    BBPort with the same game").
+  - The installer says the texts BBPort adds to the menu aren't there
+    yet: start the game once from BBPort (up to the title screen), close
+    it and run the installer again.
+  - BBPort's Saves page shows the attributes in Spain's Spanish (for
+    example "Aguante"): that's normal. BBPort's launcher reads the
+    game's original files, not mods. In the game they're in Latin
+    American Spanish ("Energía").
 
 13. FAQ
   Can I delete the installer after installing?
     Yes. When it says DONE, the mod is already in the folders of
     BBLauncher or BBPort and doesn't need it. Delete the
-    "Americas Language Pack v1.1" folder (or the .bat, .ps1 and README if
+    "Americas Language Pack v1.2" folder (or the .bat, .ps1 and README if
     you put them loose). If your antivirus deleted the installer after
     you installed, nothing happens to the mod either. Keep the zip in
     case you need to run it again (section 10).
@@ -396,13 +418,17 @@ CONTENTS
     Latin American Spanish voices. The Latin American Spanish text was
     the only one missing.
   And US English on BBPort?
-    BBPort has a single "English". To see which one you get, open the
-    menu in the game and highlight Status: "Check stats." is US English,
-    "Check status." is UK English.
+    BBPort has a single "English", and it reads the game's US English
+    files. To check: open the menu in the game and highlight Status:
+    "Check stats." is US English, "Check status." is UK English.
   Does it work with BBPort forks or other ports?
-    It's made and tested for Supermedo's BBPort. A fork that keeps its
-    launcher (Bloodborne.exe, its settings and its mods folder) should
-    work the same way, but other forks and ports aren't supported.
+    It's made for Supermedo's BBPort (from its GitHub page). A fork that
+    keeps its launcher (Bloodborne.exe, its settings and its mods folder)
+    should work the same way, but other forks and ports aren't supported.
+  Why do I have to run it again when BBPort updates?
+    BBPort adds its own texts to the game's menus, and new versions can
+    change them. The mod's Spanish menu carries a copy of them, so it has
+    to be made again with the new ones.
   I use shadPS4 and BBPort with the same game. Is that a problem?
     BBPort also loads the files that BBLauncher activates (the
     CUSA03173-mods folder next to the game). With the pack active in
@@ -423,15 +449,16 @@ CONTENTS
   sound\*_ded.fsb     Voices, Portuguese (Brazil)
 
   With BBPort:
-  msg\spaes\          Text, Spanish (Latin America), with BBPort's
-                      "Quit to Desktop" texts in the menu
+  msg\spaes\          Text, Spanish (Latin America), with the texts
+                      BBPort adds to the menu
   menu\spaes\font.gfx Font
 
 15. CREDITS AND LEGAL
   Created by Rammsiris - Game Developer
 
-  Thanks to Supermedo for BBPort. The "Quit to Desktop" texts in the
-  BBPort mod are BBPort's own, so its menu stays the same.
+  Thanks to Supermedo for BBPort. The texts BBPort adds to the menu
+  ("Quit to Desktop", "Rebirth") come from BBPort itself, so its menus
+  stay the same.
 
   Unofficial fan-made mod. It is not affiliated with, endorsed or
   sponsored by Sony Interactive Entertainment, FromSoftware, or the
@@ -451,10 +478,10 @@ CONTENTS
 ==============================================================================
 
 INICIO RÁPIDO (con BBLauncher)
-  1. Abre el zip y arrastra la carpeta "Americas Language Pack v1.1" a tu
+  1. Abre el zip y arrastra la carpeta "Americas Language Pack v1.2" a tu
      carpeta de BBLauncher (la que tiene BB_Launcher.exe), no a su carpeta
      Mods.
-  2. Abre la carpeta "Americas Language Pack v1.1" y dale doble clic a
+  2. Abre la carpeta "Americas Language Pack v1.2" y dale doble clic a
      "INSTALL - Americas Language Pack.bat". El instalador encuentra tu
      juego solo. Espera a que diga LISTO (o DONE, si la ventana sale en
      inglés). (Americas_Language_Pack.ps1 es el instalador que abre el
@@ -463,23 +490,26 @@ INICIO RÁPIDO (con BBLauncher)
      "Americas Language Pack" > Activate Mod.
   4. En el juego: OPTIONS > Sistema > Idioma > elige tu idioma en Texto y
      en Voz. Se aplica al salir de ese menú.
-  5. Listo. Ya puedes borrar la carpeta "Americas Language Pack v1.1": el
+  5. Listo. Ya puedes borrar la carpeta "Americas Language Pack v1.2": el
      mod no la necesita. Guarda el zip (trae este README y el instalador).
 
 INICIO RÁPIDO (con BBPort, el port nativo para PC)
-  1. Abre el zip y arrastra la carpeta "Americas Language Pack v1.1" a tu
+  1. Abre el zip y arrastra la carpeta "Americas Language Pack v1.2" a tu
      carpeta de BBPort (la que tiene Bloodborne.exe), no a su carpeta
      mods.
-  2. Abre la carpeta "Americas Language Pack v1.1" y dale doble clic a
+  2. Abre la carpeta "Americas Language Pack v1.2" y dale doble clic a
      "INSTALL - Americas Language Pack.bat". Encuentra tu juego y pone el
      mod en la carpeta mods de BBPort (si no existe, la crea). Espera a
      que diga LISTO.
-  3. Abre BBPort (Bloodborne.exe) > Juego y efectos (Game & effects) >
-     Text language: Español (Spanish), y Voice language: Español (América).
+  3. Abre BBPort (Bloodborne.exe) > Gameplay > Text language: Español
+     (Spanish), y Voice language: Español (América). (En BBPort 1.9.2
+     están en Juego y efectos.)
   4. A jugar: "Español" ahora es español latino. Ya puedes borrar la
-     carpeta "Americas Language Pack v1.1". Guarda el zip.
+     carpeta "Americas Language Pack v1.2". Guarda el zip.
   BBPort ya trae portugués de Brasil y las voces latinas, así que ahí el
   pack solo agrega el texto en español latino.
+  Cada vez que actualices BBPort: abre el juego una vez, ciérralo y
+  vuelve a correr el instalador (sección 10).
 
   ¿Windows o tu antivirus se quejaron? Ve la sección 11.
   ¿Algo más falló? Ve la sección 12.
@@ -511,15 +541,16 @@ CONTENIDO
   (España), portugués (Portugal) y los demás. La carpeta de tu juego nunca
   se modifica: el instalador crea un mod aparte que prendes y apagas en
   BBLauncher.
-  También corrige dos errores en los nombres oficiales de los idiomas: en
-  el texto latino "Polaco" aparece como "Pulir", y en inglés "Brazil"
-  aparece como "Brasil".
+  También corrige errores en los nombres oficiales de los idiomas: en el
+  texto latino "Polaco" aparece como "Pulir" y "Alemán" se queda en
+  inglés ("German"), y en inglés "Brazil" aparece como "Brasil".
 
-  En BBPort no hay menú Idioma en el juego: el idioma se elige en el
-  launcher de BBPort. Ya trae portugués de Brasil y las voces latinas
-  ("Español (América)"), pero su texto "Español" es el de España. Ahí el
-  pack pone el texto en español latino en el lugar del español de España,
-  y conserva la opción "Salir al escritorio" de BBPort en el menú.
+  En BBPort el idioma se elige en el launcher de BBPort. Ya trae
+  portugués de Brasil y las voces latinas ("Español (América)"), pero su
+  texto "Español" es el de España. Ahí el pack pone el texto en español
+  latino en el lugar del español de España, con los textos que BBPort
+  agrega al menú ("Salir al escritorio", "Rebirth" con la Muñeca),
+  tomados del propio BBPort.
 
 2. PARA QUIÉN ES
   Para quien tiene la versión europea (Game of the Year Edition,
@@ -535,7 +566,7 @@ CONTENIDO
   - Uno de estos:
       shadPS4 con BBLauncher ...................... sección 5
       BBPort, el port nativo para PC de Supermedo . sección 6
-        (github.com/Supermedo/bloodborne_pc, probado con la v1.9.2)
+        (github.com/Supermedo/bloodborne_pc, de la 1.9.2 a la 1.9.4)
       Solo shadPS4 ................................ sección 7
   - El juego como carpeta normal, no en un archivo .zar.
   - Con shadPS4: espacio libre para las voces (el instalador lo revisa).
@@ -557,10 +588,10 @@ CONTENIDO
 5. INSTALAR CON BBLAUNCHER (PASO A PASO)
   1. Cierra el juego (el Mod Manager de BBLauncher no funciona mientras el
      juego está abierto).
-  2. Abre el zip y arrastra la carpeta "Americas Language Pack v1.1" a tu
+  2. Abre el zip y arrastra la carpeta "Americas Language Pack v1.2" a tu
      carpeta de BBLauncher, la que tiene BB_Launcher.exe (o extrae ahí el
      zip), no a su carpeta Mods. No corras nada desde adentro del zip.
-  3. Abre la carpeta "Americas Language Pack v1.1" y dale doble clic a
+  3. Abre la carpeta "Americas Language Pack v1.2" y dale doble clic a
      "INSTALL - Americas Language Pack.bat". Se abre una ventana:
      - Si Windows pregunta si quieres ejecutarlo, elige Ejecutar (o "Más
        información" > "Ejecutar de todas formas"). Ve la sección 11.
@@ -586,17 +617,19 @@ CONTENIDO
      "Inglés (Reino Unido)", es el mismo doblaje.
   6. Para el online deja APAGADOS los parches "Unlock Game Region" y
      "Disable HTTP Requests".
-  7. Si quieres, borra la carpeta "Americas Language Pack v1.1": el mod no
+  7. Si quieres, borra la carpeta "Americas Language Pack v1.2": el mod no
      la necesita. Guarda el zip por si necesitas correrlo otra vez
      (sección 10).
 
 6. INSTALAR CON BBPORT (PASO A PASO)
-  1. Cierra el juego.
-  2. Abre el zip y arrastra la carpeta "Americas Language Pack v1.1" a tu
+  1. Si acabas de instalar o actualizar BBPort, abre el juego una vez
+     desde BBPort (hasta la pantalla de título): así BBPort escribe los
+     textos que agrega al menú y el instalador los toma. Cierra el juego.
+  2. Abre el zip y arrastra la carpeta "Americas Language Pack v1.2" a tu
      carpeta de BBPort, la que tiene Bloodborne.exe y
      "Play Bloodborne.exe" (o extrae ahí el zip), no a su carpeta mods. No
      corras nada desde adentro del zip.
-  3. Abre la carpeta "Americas Language Pack v1.1" y dale doble clic a
+  3. Abre la carpeta "Americas Language Pack v1.2" y dale doble clic a
      "INSTALL - Americas Language Pack.bat". Se abre una ventana:
      - Si Windows pregunta si quieres ejecutarlo, elige Ejecutar
        (sección 11).
@@ -606,21 +639,27 @@ CONTENIDO
        Bloodborne.exe (si no existe, la crea).
      - Si no encuentra el juego, te pide elegirlo: escoge la carpeta
        CUSA03173 (la que tiene eboot.bin y dvdroot_ps4).
+     - Toma del propio BBPort los textos que BBPort agrega al menú. Si
+       no están, o son de otra versión de BBPort, te avisa que abras el
+       juego una vez y lo vuelvas a correr.
      - Tarda unos segundos. Cuando diga LISTO, presiona Enter.
   4. Abre BBPort (Bloodborne.exe):
-     - Juego y efectos > Text language: Español. Con el mod, "Español" es
-       español latino.
+     - Gameplay > Text language: Español. Con el mod, "Español" es
+       español latino. (BBPort 1.9.2: Juego y efectos.)
      - Voice language: Español (América).
-     - Mods y parches: "Cargar mods" prendido y "Americas Language Pack"
-       marcado. Si el launcher ya estaba abierto, da clic en Actualizar.
-     Si tu launcher está en inglés: Game & effects, Spanish,
-     Mods & patches, Load mods, Refresh.
+     - Mods (Mods y parches): "Cargar mods" prendido y "Americas Language
+       Pack" marcado. Si el launcher ya estaba abierto, da clic en
+       Actualizar.
+     Si tu launcher está en inglés: Spanish, Mods & patches, Load mods,
+     Refresh.
   5. A jugar. BBPort carga el mod cada vez que abres el juego.
      El portugués de Brasil ya viene en BBPort: elige "Português (Brasil)"
      en Text language y en Voice language.
-  6. Si quieres, borra la carpeta "Americas Language Pack v1.1": el mod no
+  6. Si quieres, borra la carpeta "Americas Language Pack v1.2": el mod no
      la necesita. Guarda el zip por si necesitas correrlo otra vez
      (sección 10).
+  7. Cada vez que actualices BBPort: abre el juego una vez, ciérralo y
+     vuelve a correr el instalador (sección 10).
 
 7. INSTALAR SOLO CON SHADPS4 (SIN BBLAUNCHER)
   1. Extrae el zip donde quieras y dale doble clic a
@@ -653,7 +692,9 @@ CONTENIDO
   Con BBPort: en el juego presiona OPTIONS y ponte sobre Sistema. La
   línea de ayuda de abajo dice "Cambiar configuración del juego o salir
   del juego" (latino). Si dice "Cambia los ajustes o sale del juego."
-  (España), el mod no se cargó (sección 12).
+  (España), el mod no se cargó (sección 12). En el menú Sistema, la
+  opción de BBPort dice "Salir al escritorio"; ninguna opción debe salir
+  solo con un número, como (110006).
   La página Registro (Log) de BBPort también muestra
   "Mods: Americas Language Pack: 3 files" al abrir el juego.
 
@@ -683,8 +724,10 @@ CONTENIDO
 10. VOLVER A CORRERLO
   Solo necesitas el instalador otra vez si reinstalas o actualizas el
   juego, armas BBLauncher o BBPort desde cero o sale una versión nueva del
-  pack. En BBPort, también si prendes o apagas su opción "Quit to Desktop
-  in the title menu and in the System menu" (Juego y efectos > Extras).
+  pack. En BBPort, también cada vez que actualices BBPort, o si prendes o
+  apagas sus opciones "Quit to Desktop" o "Rebirth at the Doll": antes de
+  correrlo, abre el juego una vez (hasta la pantalla de título) y
+  ciérralo.
   Con BBLauncher:
   1. BBLauncher > Mod Manager > en "Active Mods" elige
      "Americas Language Pack" > "Deactivate Mod". (El instalador no corre
@@ -692,8 +735,9 @@ CONTENIDO
   2. Vuelve a correr el instalador (sección 5, pasos 2 y 3). El
      instalador reemplaza el mod anterior.
   3. Actívalo otra vez (sección 5, paso 4).
-  Con BBPort: cierra el juego y vuelve a correr el instalador (sección 6,
-  pasos 2 y 3). Reemplaza el mod anterior; no necesitas desmarcarlo.
+  Con BBPort: abre el juego una vez y ciérralo, luego vuelve a correr el
+  instalador (sección 6, pasos 2 y 3). Reemplaza el mod anterior; no
+  necesitas desmarcarlo.
 
 11. ANTIVIRUS Y AVISOS DE WINDOWS
   Windows: con archivos descargados de internet puede salir "Windows
@@ -708,16 +752,16 @@ CONTENIDO
   se ve el script, no un virus conocido. Los instaladores hechos como
   script son un falso positivo común.
   - Puedes revisarlo tú mismo: abre Americas_Language_Pack.ps1 con el Bloc
-    de notas. Solo lee los archivos de tu juego y la configuración de
-    BBLauncher o de BBPort, y escribe la carpeta del mod. No se conecta a
-    internet, no cambia la configuración de Windows y no toca tus
-    partidas guardadas.
+    de notas. Solo lee los archivos de tu juego y los de BBLauncher o
+    BBPort (como su configuración), y escribe la carpeta del mod. No se
+    conecta a internet, no cambia la configuración de Windows y no toca
+    tus partidas guardadas.
   - Si tu antivirus lo bloquea, no necesitas apagar tu protección. Agrega
     una excepción solo para la carpeta del instalador, restaura el archivo
     de la cuarentena (o vuelve a extraer el zip) y córrelo:
       Bitdefender: Protección > Antivirus > Configuración > Administrar
       excepciones > Agregar una excepción > elige la carpeta
-      "Americas Language Pack v1.1" > activa todas las opciones de
+      "Americas Language Pack v1.2" > activa todas las opciones de
       análisis > Guardar. (Los nombres pueden variar un poco según tu
       versión.)
       Seguridad de Windows: Protección antivirus y contra amenazas >
@@ -785,18 +829,25 @@ CONTENIDO
     carpeta no es un mod (por ejemplo la del instalador, si la metiste en
     mods). Bórrala de ahí; el mod es la carpeta que se llama
     "Americas Language Pack".
-  - En BBPort el menú Sistema dice "Idioma" (o el menú de título
-    "Cuadro de opinión") en lugar de "Salir al escritorio": cambiaste la
-    opción "Quit to Desktop" de BBPort después de instalar (vuelve a
-    correr el instalador, sección 10), o también se están cargando los
-    mods de BBLauncher (sección 13, "Uso shadPS4 y BBPort con el mismo
-    juego").
+  - En BBPort una opción del menú sale solo con un número, como
+    (110006), o "Salir al escritorio" te abre el menú Idioma: BBPort se
+    actualizó, o cambiaron sus opciones, después de instalar. Abre el
+    juego una vez, ciérralo y vuelve a correr el instalador (sección 10).
+    Si sigue pasando, puede que también se estén cargando los mods de
+    BBLauncher (sección 13, "Uso shadPS4 y BBPort con el mismo juego").
+  - El instalador dice que todavía no están los textos que BBPort agrega
+    al menú: abre el juego una vez desde BBPort (hasta la pantalla de
+    título), ciérralo y vuelve a correr el instalador.
+  - La página Saves de BBPort muestra los atributos en español de España
+    (por ejemplo "Aguante"): es normal. El launcher de BBPort lee los
+    archivos originales del juego, no los mods. En el juego salen en
+    español latino ("Energía").
 
 13. PREGUNTAS FRECUENTES
   ¿Puedo borrar el instalador después de instalar?
     Sí. Cuando dice LISTO, el mod ya quedó en las carpetas de BBLauncher o
     de BBPort y no lo necesita. Borra la carpeta
-    "Americas Language Pack v1.1" (o el .bat, el .ps1 y el README si los
+    "Americas Language Pack v1.2" (o el .bat, el .ps1 y el README si los
     pusiste sueltos). Si tu antivirus borró el instalador después de
     instalar, al mod tampoco le pasa nada. Guarda el zip por si necesitas
     correrlo otra vez (sección 10).
@@ -839,14 +890,19 @@ CONTENIDO
     BBPort ya trae portugués de Brasil (texto y voces) y las voces en
     español latino. Lo único que faltaba era el texto en español latino.
   ¿Y el inglés de Estados Unidos en BBPort?
-    BBPort tiene un solo "English". Para saber cuál te toca, abre el menú
-    en el juego y ponte sobre Status: "Check stats." es inglés de Estados
-    Unidos y "Check status." es inglés del Reino Unido.
+    BBPort tiene un solo "English", y lee los archivos del inglés de
+    Estados Unidos del juego. Para revisarlo: abre el menú en el juego y
+    ponte sobre Status: "Check stats." es inglés de Estados Unidos y
+    "Check status." es inglés del Reino Unido.
   ¿Funciona con forks de BBPort u otros ports?
-    Está hecho y probado para el BBPort de Supermedo. Un fork que conserve
-    su launcher (Bloodborne.exe, su configuración y su carpeta mods)
-    debería funcionar igual, pero otros forks y ports no están
-    soportados.
+    Está hecho para el BBPort de Supermedo (el de su página de GitHub).
+    Un fork que conserve su launcher (Bloodborne.exe, su configuración y
+    su carpeta mods) debería funcionar igual, pero otros forks y ports no
+    están soportados.
+  ¿Por qué hay que volver a correrlo cuando BBPort se actualiza?
+    BBPort agrega sus propios textos a los menús del juego, y una versión
+    nueva puede cambiarlos. El menú en español del mod lleva una copia de
+    esos textos, así que hay que volver a crearlo con los nuevos.
   Uso shadPS4 y BBPort con el mismo juego. ¿Hay problema?
     BBPort también carga los archivos que activa BBLauncher (la carpeta
     CUSA03173-mods junto al juego). Con el pack activo en BBLauncher, en
@@ -867,15 +923,16 @@ CONTENIDO
   sound\*_ded.fsb     Voces, portugués (Brasil)
 
   Con BBPort:
-  msg\spaes\          Texto, español (Latinoamérica), con los textos de
-                      "Salir al escritorio" de BBPort en el menú
+  msg\spaes\          Texto, español (Latinoamérica), con los textos que
+                      BBPort agrega al menú
   menu\spaes\font.gfx Fuente
 
 15. CRÉDITOS Y AVISO LEGAL
   Created by Rammsiris - Game Developer
 
-  Gracias a Supermedo por BBPort. Los textos de "Salir al escritorio" del
-  mod para BBPort son los del propio BBPort, para que su menú quede igual.
+  Gracias a Supermedo por BBPort. Los textos que BBPort agrega al menú
+  ("Salir al escritorio", "Rebirth") salen del propio BBPort, para que
+  sus menús queden igual.
 
   Mod no oficial hecho por fans. No está afiliado a Sony Interactive
   Entertainment, FromSoftware ni a los proyectos shadPS4, BBLauncher y
@@ -891,5 +948,5 @@ CONTENIDO
 
 
 ------------------------------------------------------------------------------
-  Americas Language Pack v1.1 - Created by Rammsiris - Game Developer
+  Americas Language Pack v1.2 - Created by Rammsiris - Game Developer
 ------------------------------------------------------------------------------
